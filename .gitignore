@@ -1,0 +1,18 @@
+# 無視するファイルとディレクトリ
+
+# アカウント情報
+config/accounts.json
+
+# クッキーファイル
+config/cookies/*.json
+
+# ログファイル
+logs/*.log
+
+# コンパイル済みPythonファイル
+utils/__pycache__/
+
+# 環境構築用に作成されるファイル
+*.pyc
+*.pyo
+__pycache__/
