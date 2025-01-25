@@ -31,11 +31,11 @@ def process_accounts(accounts, hashtag, desired_username=None):
             # ハッシュタグ検索
             logging.info(f"ハッシュタグ '{hashtag}' を検索中...")
             print(f"ハッシュタグ '{hashtag}' を検索中...")
-            posts = search_hashtag(driver, hashtag)
+            posts = search_hashtag(driver, hashtag, desired_username)
 
             # 最近の投稿をフィルタリング
-            logging.info(f"最近の投稿をフィルタリング中（指定ユーザー: {desired_username}）...")
-            filtered_posts = filter_recent_posts(driver, posts, hours=3, desired_username=desired_username)
+            logging.info(f"最近の投稿をフィルタリング中...")
+            filtered_posts = filter_recent_posts(driver, posts, hours=3)
 
             # 投稿に対する操作
             for post in filtered_posts:
