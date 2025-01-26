@@ -3,15 +3,16 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
+
 def interact_with_post(driver, post_url):
     driver.get(post_url)
 
     try:
-        # Wait for the "Like" button and click it
+        # いいねボタンをクリック
         WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "_aamw"))
+            EC.presence_of_element_located((By.XPATH, "//span//*[name()='svg' and @aria-label='Like']"))
         )
-        like_button = driver.find_element(By.CLASS_NAME, "_aamw")
+        like_button = driver.find_element(By.XPATH, "//span//*[name()='svg' and @aria-label='Like']")
         like_button.click()
         print(f"いいね成功: {post_url}")
         time.sleep(2)
@@ -19,11 +20,11 @@ def interact_with_post(driver, post_url):
         print(f"いいね失敗: {e}")
 
     try:
-        # Wait for the "Save" button and click it
+        # 保存ボタンをクリック
         WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, 'button svg[aria-label="保存"]'))
+            EC.presence_of_element_located((By.CSS_SELECTOR, "svg[aria-label='Save']"))
         )
-        save_button = driver.find_element(By.CSS_SELECTOR, 'button svg[aria-label="保存"]')
+        save_button = driver.find_element(By.CSS_SELECTOR, "svg[aria-label='Save']")
         save_button.click()
         print(f"保存成功: {post_url}")
         time.sleep(2)
@@ -31,11 +32,11 @@ def interact_with_post(driver, post_url):
         print(f"保存失敗: {e}")
 
     try:
-        # Wait for the "Share" button and click it
+        # シェアボタンをクリック
         WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, 'button svg[aria-label="共有"]'))
+            EC.presence_of_element_located((By.CSS_SELECTOR, "svg[aria-label='share']"))
         )
-        share_button = driver.find_element(By.CSS_SELECTOR, 'button svg[aria-label="共有"]')
+        share_button = driver.find_element(By.CSS_SELECTOR, "svg[aria-label='share']")
         share_button.click()
         print(f"シェア成功: {post_url}")
         time.sleep(2)

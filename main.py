@@ -1,9 +1,14 @@
 import logging
-from utils.login import login_with_cookies
+import json
+import os
+import time
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from utils.login import login_with_cookies, save_cookies
 from utils.hashtag_search import search_hashtag, filter_recent_posts
 from utils.post_interaction import interact_with_post
 from utils.driver_setup import init_driver
-import json
 
 # ログ設定
 logging.basicConfig(
@@ -12,21 +17,37 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-
 def process_accounts(accounts, hashtag, desired_username=None):
     """
-    アカウントごとにハッシュタグ検索を実行し、指定された投稿に対して操作を実行します。
-
-    :param accounts: アカウント情報のリスト
-    :param hashtag: 検索するハッシュタグ
-    :param desired_username: 指定ユーザーの投稿のみを操作する場合に使用
+    アカウントごとにログインと投稿処理を実行します。
     """
     for account in accounts:
         driver = init_driver()
+        username = account['username']
+        password = account.get('password')  # パスワードを取得（必要な場合に手動ログイン用）
+
         try:
-            logging.info(f"{account['username']} でログインを試みます")
-            print(f"{account['username']} でログインを試みます")
-            login_with_cookies(driver, account['username'])
+            # クッキーを使用してログイン
+            cookies_file = f"config/cookies/{username}_cookies.json"
+            if not os.path.exists(cookies_file):
+                print(f"クッキーが存在しません: {cookies_file}")
+                print(f"{username} の手動ログインを行ってください...")
+                driver.get("https://www.instagram.com/accounts/login/")
+                time.sleep(100)  # 手動ログインの時間を与える
+                save_cookies(driver, username)  # クッキーを保存
+
+            logging.info(f"{username} でログインを試みます")
+            print(f"{username} でログインを試みます")
+            login_with_cookies(driver, username)
+
+            try:
+                WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, "a[href='/']"))
+                )
+                print(f"{username} のログインが確認されました")
+            except Exception as e:
+                print(f"{username} のログイン確認に失敗しました: {e}")
+                continue
 
             # ハッシュタグ検索
             logging.info(f"ハッシュタグ '{hashtag}' を検索中...")
@@ -48,8 +69,8 @@ def process_accounts(accounts, hashtag, desired_username=None):
             print(f"エラーが発生しました: {e}")
         finally:
             driver.quit()
-            logging.info(f"{account['username']} の処理が完了しました")
-            print(f"{account['username']} の処理が完了しました")
+            logging.info(f"{username} の処理が完了しました")
+            print(f"{username} の処理が完了しました")
 
 
 if __name__ == "__main__":

@@ -78,8 +78,12 @@ pip install -r requirements.txt
 
 ### 4. クッキーの準備
 
-- 一度手動でログインし、ブラウザのクッキーを取得して `config/cookies/` ディレクトリに保存してください。
-- 保存ファイル名は `<username>_cookies.json` にしてください。
+```bash
+python3 save_cookies.py
+```
+
+<!-- - 一度手動でログインし、ブラウザのクッキーを取得して `config/cookies/` ディレクトリに保存してください。
+- 保存ファイル名は `<username>_cookies.json` にしてください。 -->
 
 ---
 
